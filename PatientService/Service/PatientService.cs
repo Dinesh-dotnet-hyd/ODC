@@ -1,5 +1,4 @@
 ﻿using PatientService.DTOs;
-using PatientService.Helpers;
 using PatientService.Models;
 using PatientService.Repositories;
 
@@ -8,12 +7,10 @@ namespace PatientService.Service
     public class PatientService : IPatientService
     {
         private readonly IPatientRepository _repo;
-        private readonly ImageStorageHelper _imageHelper;
 
-        public PatientService(IPatientRepository repo, ImageStorageHelper imghelper)
+        public PatientService(IPatientRepository repo)
         {
             _repo = repo;
-            _imageHelper = imghelper;
         }
 
         public async Task<PatientResponseDto> CreatePatient(PatientCreateDto dto)
@@ -24,7 +21,6 @@ namespace PatientService.Service
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 Phone = dto.Phone,
-                //ProfileImageUrl = dto.ProfileImageUrl,
                 Email = dto.Email,
                 PassHash = dto.PassHash,
                 DateOfBirth = dto.DateOfBirth,
@@ -56,11 +52,7 @@ namespace PatientService.Service
             var patient = await _repo.GetByIdAsync(id);
             return patient == null ? null : ToDto(patient);
         }
-        public async Task<PatientResponseDto> GetByEmail(string email)
-        {
-            var patient= await _repo.GetByEmailAsync(email);
-            return patient == null ? null : ToDto(patient);
-        }
+
         public async Task<PatientResponseDto> UpdatePatient(int id, PatientUpdateDto dto)
         {
             var patient = await _repo.GetByIdAsync(id);
@@ -77,11 +69,6 @@ namespace PatientService.Service
             return ToDto(patient);
         }
 
-        public async Task<AuthResponseDto> AuthValidate(string Email, string Password)
-        {
-            return await _repo.AuthValidate(Email, Password);
-        }
-
         private PatientResponseDto ToDto(Patient p)
         {
             return new PatientResponseDto
@@ -90,8 +77,6 @@ namespace PatientService.Service
                 UserId = p.UserId,
                 FirstName = p.FirstName,
                 LastName = p.LastName,
-                Email = p.Email,
-                ProfileImageUrl = p.ProfileImageUrl,
                 Phone = p.Phone,
                 DateOfBirth = p.DateOfBirth,
                 MedicalHistory = p.MedicalHistory,
@@ -101,22 +86,5 @@ namespace PatientService.Service
                 //InsuranceNumber = p.InsuranceNumber
             };
         }
-        public async Task<string> UploadProfileImage(int patientId, IFormFile file)
-        {
-            var patient = await _repo.GetByIdAsync(patientId);
-            if (patient == null)
-                throw new Exception("Patient not found");
-
-            var imageUrl = await _imageHelper.SaveProfileImageAsync(file);
-
-            patient.ProfileImageUrl = imageUrl;
-            patient.UpdatedAt = DateTime.UtcNow;
-
-            await _repo.UpdateAsync(patient);
-
-            return imageUrl;
-        }
-
-        
     }
 }

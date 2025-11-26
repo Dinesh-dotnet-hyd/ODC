@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using PatientService.Data;
-using PatientService.Helpers;
 using PatientService.Repositories;
 using PatientService.Service;
 
@@ -14,7 +13,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // DI
 builder.Services.AddScoped<IPatientRepository, PatientRepositoy>();
 builder.Services.AddScoped<IPatientService, PatientService.Service.PatientService>();
-builder.Services.AddScoped<ImageStorageHelper>();
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -30,8 +28,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseStaticFiles();
-
 
 app.UseHttpsRedirection();
 

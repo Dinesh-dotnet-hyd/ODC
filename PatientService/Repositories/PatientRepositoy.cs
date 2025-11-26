@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PatientService.Data;
-using PatientService.DTOs;
 using PatientService.Models;
 
 namespace PatientService.Repositories
@@ -16,10 +15,6 @@ namespace PatientService.Repositories
        public async Task<Patient> GetByIdAsync(int id)
         {
             return await _context.patients.FirstOrDefaultAsync(x=>x.PatientId==id);
-        }
-        public async Task<Patient> GetByEmailAsync(string email)
-        {
-            return await _context.patients.FirstOrDefaultAsync(x=>x.Email==email);    
         }
 
        public async Task<IEnumerable<Patient>> GetAllAsync()
@@ -62,19 +57,6 @@ namespace PatientService.Repositories
                 _context.patients.Remove(pat);
                 await _context.SaveChangesAsync();
             }
-        }
-        public async Task<AuthResponseDto> AuthValidate(string Email, string passHash)
-        {
-            var patient = await _context.patients.FirstOrDefaultAsync(x => x.Email == Email && x.PassHash==passHash);
-
-           var res= new AuthResponseDto
-            {
-                Email = patient.Email,
-                PasswordHash = patient.PassHash
-
-            };
-            return res;
-
         }
     }
 }
