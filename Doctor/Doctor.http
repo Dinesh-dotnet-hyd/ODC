@@ -1,6 +1,0 @@
-@Doctor_HostAddress = http://localhost:5190
-
-GET {{Doctor_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
