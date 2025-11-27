@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PatientService.Data;
+using PatientService.DTOs;
 using PatientService.Models;
 
 namespace PatientService.Repositories
@@ -57,6 +58,20 @@ namespace PatientService.Repositories
                 _context.patients.Remove(pat);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<bool> LoginPatient(PatientLoginDto patientLoginDto)
+        {
+            var pat = await _context.patients.FirstOrDefaultAsync(x=>x.Email == patientLoginDto.Email);
+            if (pat == null)
+            {
+                return false;
+            }
+            if (pat.PassHash == patientLoginDto.Password)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

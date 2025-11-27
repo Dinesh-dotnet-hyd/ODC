@@ -51,5 +51,11 @@ namespace PatientService.Controllers
             await _service.DeletePatient(id);
             return NoContent();
         }
+
+        //[HttpGet("login")]
+        //public Task<ActionResult<bool>> PatientLogin(PatientLoginDto dto)
+        //{
+            
+        //}
     }
 }

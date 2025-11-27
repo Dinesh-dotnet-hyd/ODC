@@ -15,6 +15,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Register repository - use the concrete implementation and Scoped lifetime
 builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        });
+});
 
 var app = builder.Build();
 
@@ -27,6 +37,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();   // recommended
 app.UseAuthorization();
+app.UseCors("AllowReactApp");
 
 app.MapControllers();
 
