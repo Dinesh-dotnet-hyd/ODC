@@ -13,6 +13,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // DI
 builder.Services.AddScoped<IPatientRepository, PatientRepositoy>();
 builder.Services.AddScoped<IPatientService, PatientService.Service.PatientService>();
+
 // Add services to the container.
 
 builder.Services.AddControllers();
